@@ -7,17 +7,16 @@ public class LevelGenerator : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private int _maxSegmentsAtOnce;
-    [SerializeField] private List<GameObject> _segmentVariants;
-    [Tooltip("Число в диапазоне от 0 до длины коллекции включительно")]
-    [SerializeField] private int _firstSegmentIndex;
-    
+    [SerializeField] private List<SegmentModel> _segmentVariants;
+    [SerializeField] private Transform _segmentsHolder;
+
     private Vector3 _currentPosition = new Vector3(0, 0, 0);
     private Queue<GameObject> _levelSegments = new Queue<GameObject>();
 
     void Start()
     {
-        SpawnSegment(_firstSegmentIndex, ref _currentPosition);
-        for (int i = 0; i < _maxSegmentsAtOnce; i++)
+        Debug.Assert(_segmentsHolder, "No Segment Holder!");
+        for (int i = 0; i < _maxSegmentsAtOnce; i++) 
             SpawnSegment(Random.Range(0, _segmentVariants.Count), ref _currentPosition);
     }
     
@@ -32,8 +31,13 @@ public class LevelGenerator : MonoBehaviour
 
     private void SpawnSegment(int index, ref Vector3 position)
     {
-        var segment = Instantiate(_segmentVariants[index], position, Quaternion.identity);
-        position.z++;
-        _levelSegments.Enqueue(segment);
+        var minInRow = 1;
+        var segmentsInRow = Random.Range(minInRow, _segmentVariants[index].maxInRow);
+        for (var i = 0; i < segmentsInRow; i++)
+        {
+            var segmentModel = Instantiate(_segmentVariants[index].segment, position, Quaternion.identity, _segmentsHolder);
+            position.z++;
+            _levelSegments.Enqueue(segmentModel);
+        }
     }
 }
