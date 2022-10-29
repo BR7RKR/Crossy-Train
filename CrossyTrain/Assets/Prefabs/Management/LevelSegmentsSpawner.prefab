@@ -50,3 +50,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fd68e9f9dbda5454f9534ed662aa36b2, type: 2}
   - {fileID: 11400000, guid: d1902c86caad6e34caed9cb3642ee3e8, type: 2}
   _segmentsHolder: {fileID: 0}
+  _targetForObserving: {fileID: 0}
