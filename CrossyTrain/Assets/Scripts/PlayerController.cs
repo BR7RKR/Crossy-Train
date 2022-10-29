@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private bool _isLeftBlocked;
     private bool _isRightBlocked;
     public int Score { get; private set; }
+    public bool IsGameOver { get; private set; }
 
     private static readonly int Jump = Animator.StringToHash("jump");
 
@@ -99,5 +100,11 @@ public class PlayerController : MonoBehaviour
     public void FinishJump()
     {
         _isJupming = false;
+    }
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Obstacle"))
+            IsGameOver = true;
     }
 }
