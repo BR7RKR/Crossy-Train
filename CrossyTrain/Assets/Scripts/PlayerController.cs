@@ -25,14 +25,14 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _gameMenu = FindObjectOfType<Menu>();
 
-        SwipeDetection.SwipeEvent += OnSwipe;
+        SwipeDetection.SwipeEvent += MovementLogic;
     }
 
-    private void OnSwipe(Vector2 direction)
+    private void MovementLogic(Vector2 direction)
     {
         if (_gameMenu.IsGameStarted)
         {
-            //AreaScan();
+            AreaScan();
             if (direction == Vector2.up && !_isJupming && !_isForwardBlocked)
             {
                 float xDelta = 0;
@@ -49,47 +49,6 @@ public class PlayerController : MonoBehaviour
                 MovePlayer(new Vector3(-1, 0, 0));
         }
     }
-
-    private void FixedUpdate()
-    {
-        AreaScan();
-        MovementLogic();
-    }
-
-    private void MovementLogic()
-    {
-        if (_gameMenu.IsGameStarted)
-        {
-            //AreaScan();
-            if (Input.GetKey(KeyCode.W) && !_isJupming && !_isForwardBlocked)
-            {
-                float xDelta = 0;
-                if (transform.position.x % 1 != 0)
-                {
-                    xDelta = Mathf.Round(transform.position.x) - transform.position.x;
-                }
-
-                MovePlayer(new Vector3(xDelta, 0, 1));
-                Score++;
-            }
-            else if (Input.GetKey(KeyCode.A) && !_isJupming && !_isLeftBlocked)
-            {
-                MovePlayer(new Vector3(-1, 0, 0));
-            }
-            else if (Input.GetKey(KeyCode.D) && !_isJupming && !_isRightBlocked)
-            {
-                MovePlayer(new Vector3(1, 0, 0));
-            }
-        }
-    }
-    
-    // public void OnBeginDrag(PointerEventData eventData)
-    // {
-    // }
-    //
-    // public void OnDrag(PointerEventData eventData)
-    // {
-    // }
 
     private void MovePlayer(Vector3 delta)
     {
