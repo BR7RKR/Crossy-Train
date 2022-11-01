@@ -15,7 +15,6 @@ public class GameOver : MonoBehaviour
     {
         if (_player.IsGameOver)
         {
-            Debug.Log(_player.IsGameOver);
             Time.timeScale = 0;
         }
     }

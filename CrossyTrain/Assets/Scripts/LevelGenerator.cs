@@ -11,8 +11,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private Transform _segmentsHolder;
     [SerializeField] private Transform _targetForObserving;
     [SerializeField] private float _minDistanceFromTarget;
-    [SerializeField] private int _obstaclesToMove = 2;
-    
+
     private Vector3 _currentPosition = new Vector3(0, 0, 0);
     private Queue<GameObject> _levelSegments = new Queue<GameObject>();
     private Vector3 _currentDeletePosition;
@@ -34,11 +33,19 @@ public class LevelGenerator : MonoBehaviour
             SpawnSegment(Random.Range(0, _segmentVariants.Count), ref _currentPosition);
             _previousTargetPosition = _targetForObserving.position;
         }
-        if (_targetForObserving.position.z - _minDistanceFromTarget >= _currentDeletePosition.z) // использовать систему ивентов для получения информации о нажатии от игрока
+        if (_targetForObserving.position.z - _minDistanceFromTarget >= _currentDeletePosition.z)
         {
-            Destroy(_levelSegments.Dequeue());
-            _currentDeletePosition.z++;
+            CompletelyDestroySegment();
         }
+    }
+
+    private void CompletelyDestroySegment()
+    {
+        var segmentToDelete = _levelSegments.Dequeue();
+        for (int i = 0; i < segmentToDelete.transform.childCount; i++)
+            Destroy(segmentToDelete.transform.GetChild(i).gameObject);
+        Destroy(segmentToDelete);
+        _currentDeletePosition.z++;
     }
 
     private void SpawnSegment(int index, ref Vector3 position)

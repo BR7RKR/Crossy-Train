@@ -178,4 +178,4 @@ MonoBehaviour:
   _spawnDelayMin: 20
   _spawnPosX: 30
   _obstacle: {fileID: 5836361832062371382, guid: 02494ac7f5ae8f4428a11d64c7293da9, type: 3}
-  _destroyDelay: 30
+  _destroyDelay: 10

@@ -1,15 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
     [SerializeField] private float _borderX;
-    
+
+    private Menu _gameMenu;
     private Animator _animator;
     private bool _isJupming;
     private bool _isForwardBlocked;
@@ -22,30 +20,80 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 1;
+        IsGameOver = false;
         _animator = GetComponent<Animator>();
+        _gameMenu = FindObjectOfType<Menu>();
     }
 
     private void FixedUpdate()
     {
         AreaScan();
-        if (Input.GetKeyDown(KeyCode.W) && !_isJupming && !_isForwardBlocked)
+        MovementLogic();
+    }
+
+    private void MovementLogic()
+    {
+        if (_gameMenu.IsGameStarted)
         {
-            float xDelta = 0;
-            if (transform.position.x % 1 != 0)
+            //AreaScan();
+            if (Input.GetKey(KeyCode.W) && !_isJupming && !_isForwardBlocked)
             {
-                xDelta = Mathf.Round(transform.position.x) - transform.position.x;
+                float xDelta = 0;
+                if (transform.position.x % 1 != 0)
+                {
+                    xDelta = Mathf.Round(transform.position.x) - transform.position.x;
+                }
+
+                MovePlayer(new Vector3(xDelta, 0, 1));
+                Score++;
             }
-            MovePlayer(new Vector3(xDelta, 0, 1));
-            Score++;
+            else if (Input.GetKey(KeyCode.A) && !_isJupming && !_isLeftBlocked)
+            {
+                MovePlayer(new Vector3(-1, 0, 0));
+            }
+            else if (Input.GetKey(KeyCode.D) && !_isJupming && !_isRightBlocked)
+            {
+                MovePlayer(new Vector3(1, 0, 0));
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.A) && !_isJupming && !_isLeftBlocked)
+    }
+    
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (_gameMenu.IsGameStarted)
         {
-            MovePlayer(new Vector3(-1, 0, 0));
+            //AreaScan();
+            if ((Mathf.Abs(eventData.delta.x) <= Mathf.Abs(eventData.delta.y)) && !_isJupming && !_isForwardBlocked)
+            {
+                if (eventData.delta.y > 0)
+                {
+                    float xDelta = 0;
+                    if (transform.position.x % 1 != 0)
+                    {
+                        xDelta = Mathf.Round(transform.position.x) - transform.position.x;
+                    }
+
+                    MovePlayer(new Vector3(xDelta, 0, 1));
+                    Score++;
+                }
+            }
+            else if ((Mathf.Abs(eventData.delta.x) > Mathf.Abs(eventData.delta.y)) && !_isJupming && !_isLeftBlocked)
+            {
+                if (eventData.delta.x > 0)
+                    MovePlayer(new Vector3(1, 0, 0));
+            }
+            else if ((Mathf.Abs(eventData.delta.x) > Mathf.Abs(eventData.delta.y)) && !_isJupming && !_isRightBlocked)
+            {
+                if (eventData.delta.x <= 0)
+                    MovePlayer(new Vector3(-1, 0, 0));
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.D) && !_isJupming && !_isRightBlocked)
-        {
-            MovePlayer(new Vector3(1, 0, 0));
-        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        throw new NotImplementedException();
     }
 
     private void MovePlayer(Vector3 delta)
