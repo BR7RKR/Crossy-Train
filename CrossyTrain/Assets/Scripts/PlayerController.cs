@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IBeginDragHandler, IDragHandler
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float _borderX;
 
@@ -24,6 +24,30 @@ public class PlayerController : MonoBehaviour, IBeginDragHandler, IDragHandler
         IsGameOver = false;
         _animator = GetComponent<Animator>();
         _gameMenu = FindObjectOfType<Menu>();
+
+        SwipeDetection.SwipeEvent += OnSwipe;
+    }
+
+    private void OnSwipe(Vector2 direction)
+    {
+        if (_gameMenu.IsGameStarted)
+        {
+            //AreaScan();
+            if (direction == Vector2.up && !_isJupming && !_isForwardBlocked)
+            {
+                float xDelta = 0;
+                if (transform.position.x % 1 != 0)
+                {
+                    xDelta = Mathf.Round(transform.position.x) - transform.position.x;
+                }
+                MovePlayer(new Vector3(xDelta, 0, 1));
+                Score++;
+            }
+            else if (direction == Vector2.right && !_isJupming && !_isRightBlocked)
+                MovePlayer(new Vector3(1, 0, 0));
+            else if (direction == Vector2.left && !_isJupming && !_isLeftBlocked)
+                MovePlayer(new Vector3(-1, 0, 0));
+        }
     }
 
     private void FixedUpdate()
@@ -59,42 +83,13 @@ public class PlayerController : MonoBehaviour, IBeginDragHandler, IDragHandler
         }
     }
     
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (_gameMenu.IsGameStarted)
-        {
-            //AreaScan();
-            if ((Mathf.Abs(eventData.delta.x) <= Mathf.Abs(eventData.delta.y)) && !_isJupming && !_isForwardBlocked)
-            {
-                if (eventData.delta.y > 0)
-                {
-                    float xDelta = 0;
-                    if (transform.position.x % 1 != 0)
-                    {
-                        xDelta = Mathf.Round(transform.position.x) - transform.position.x;
-                    }
-
-                    MovePlayer(new Vector3(xDelta, 0, 1));
-                    Score++;
-                }
-            }
-            else if ((Mathf.Abs(eventData.delta.x) > Mathf.Abs(eventData.delta.y)) && !_isJupming && !_isLeftBlocked)
-            {
-                if (eventData.delta.x > 0)
-                    MovePlayer(new Vector3(1, 0, 0));
-            }
-            else if ((Mathf.Abs(eventData.delta.x) > Mathf.Abs(eventData.delta.y)) && !_isJupming && !_isRightBlocked)
-            {
-                if (eventData.delta.x <= 0)
-                    MovePlayer(new Vector3(-1, 0, 0));
-            }
-        }
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        throw new NotImplementedException();
-    }
+    // public void OnBeginDrag(PointerEventData eventData)
+    // {
+    // }
+    //
+    // public void OnDrag(PointerEventData eventData)
+    // {
+    // }
 
     private void MovePlayer(Vector3 delta)
     {
