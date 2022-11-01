@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class Move : MonoBehaviour
@@ -12,6 +13,6 @@ public class Move : MonoBehaviour
 
     private void MoveRight()
     {
-        transform.Translate(transform.right.normalized * _speed * Time.deltaTime);
+        transform.Translate(Vector3.right * (_speed * Time.deltaTime), Space.Self);
     }
 }
