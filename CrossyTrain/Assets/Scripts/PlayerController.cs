@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
         SwipeDetection.SwipeEvent += MovementLogic;
     }
 
-    private void MovementLogic(Vector2 direction)
+    private void MovementLogic(Vector2 direction)  //TODO: возможно стоит на пк оставить управление wasd
     {
         if (_gameMenu.IsGameStarted)
         {
@@ -107,6 +107,9 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter(Collider col)
     {
         if (col.CompareTag("Obstacle"))
+        {
             IsGameOver = true;
+            SwipeDetection.SwipeEvent -= MovementLogic;
+        }
     }
 }

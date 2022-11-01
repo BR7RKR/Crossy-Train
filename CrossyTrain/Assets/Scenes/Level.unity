@@ -272,7 +272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 636605607942251949, guid: f345f2af9d9b790468747a58fcda45fc, type: 3}
       propertyPath: _deadZone
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 636605607942251950, guid: f345f2af9d9b790468747a58fcda45fc, type: 3}
       propertyPath: m_RootOrder

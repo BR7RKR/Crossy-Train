@@ -16,12 +16,12 @@ public class SwipeDetection : MonoBehaviour
     private bool _isSwiping;
     private bool _isMobile;
     
-    private void Start()
+    private void Awake()
     {
         _isMobile = Application.isMobilePlatform;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!_isMobile)
         {
