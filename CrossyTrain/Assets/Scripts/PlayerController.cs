@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     private Menu _gameMenu;
     private Animator _animator;
-    private bool _isJupming;
+    private bool _isJumping;
     private bool _isForwardBlocked;
     private bool _isLeftBlocked;
     private bool _isRightBlocked;
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         if (_gameMenu.IsGameStarted)
         {
             AreaScan();
-            if (direction == Vector2.up && !_isJupming && !_isForwardBlocked)
+            if (direction == Vector2.up && !_isJumping && !_isForwardBlocked)
             {
                 float xDelta = 0;
                 if (transform.position.x % 1 != 0)
@@ -43,9 +43,9 @@ public class PlayerController : MonoBehaviour
                 MovePlayer(new Vector3(xDelta, 0, 1));
                 Score++;
             }
-            else if (direction == Vector2.right && !_isJupming && !_isRightBlocked)
+            else if (direction == Vector2.right && !_isJumping && !_isRightBlocked)
                 MovePlayer(new Vector3(1, 0, 0));
-            else if (direction == Vector2.left && !_isJupming && !_isLeftBlocked)
+            else if (direction == Vector2.left && !_isJumping && !_isLeftBlocked)
                 MovePlayer(new Vector3(-1, 0, 0));
         }
     }
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     private void MovePlayer(Vector3 delta)
     {
         _animator.SetTrigger(Jump);
-        _isJupming = true;
+        _isJumping = true;
         transform.Translate(CheckForBorders(delta));
     }
     
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
 
     public void FinishJump()
     {
-        _isJupming = false;
+        _isJumping = false;
     }
 
     private void OnTriggerEnter(Collider col)
