@@ -13,10 +13,11 @@ public class PlayerController : MonoBehaviour
     private bool _isForwardBlocked;
     private bool _isLeftBlocked;
     private bool _isRightBlocked;
+    
+    private static readonly int Jump = Animator.StringToHash("jump");
+    
     public int Score { get; private set; }
     public bool IsGameOver { get; private set; }
-
-    private static readonly int Jump = Animator.StringToHash("jump");
 
     private void Awake()
     {
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
         SwipeDetection.SwipeEvent += MovementLogic;
     }
 
-    private void MovementLogic(Vector2 direction)  //TODO: возможно стоит на пк оставить управление wasd
+    private void MovementLogic(Vector2 direction) //TODO: возможно стоит на пк оставить управление wasd
     {
         if (_gameMenu.IsGameStarted)
         {
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
                 {
                     xDelta = Mathf.Round(transform.position.x) - transform.position.x;
                 }
+
                 MovePlayer(new Vector3(xDelta, 0, 1));
                 Score++;
             }
@@ -56,23 +58,23 @@ public class PlayerController : MonoBehaviour
         _isJumping = true;
         transform.Translate(CheckForBorders(delta));
     }
-    
+
     private void AreaScan()
     {
         Debug.DrawRay(transform.position, transform.forward, Color.red);
         RaycastHit hitForward, hitLeft, hitRight;
         if (Physics.Raycast(transform.position, transform.forward, out hitForward, 1))
         {
-            if(hitForward.collider.gameObject.transform.CompareTag("SafeObstacle") && !_isForwardBlocked)
+            if (hitForward.collider.gameObject.transform.CompareTag("SafeObstacle") && !_isForwardBlocked)
             {
                 _isForwardBlocked = true;
             }
         }
         else _isForwardBlocked = false;
 
-        if (Physics.Raycast(transform.position, -transform.right, out hitLeft,1))
+        if (Physics.Raycast(transform.position, -transform.right, out hitLeft, 1))
         {
-            if(hitLeft.collider.gameObject.transform.CompareTag("SafeObstacle") && !_isLeftBlocked)
+            if (hitLeft.collider.gameObject.transform.CompareTag("SafeObstacle") && !_isLeftBlocked)
             {
                 _isLeftBlocked = true;
             }
@@ -81,14 +83,14 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(transform.position, transform.right, out hitRight, 1))
         {
-            if(hitRight.collider.gameObject.transform.CompareTag("SafeObstacle") && !_isRightBlocked)
+            if (hitRight.collider.gameObject.transform.CompareTag("SafeObstacle") && !_isRightBlocked)
             {
                 _isRightBlocked = true;
             }
         }
         else _isRightBlocked = false;
     }
-    
+
     private Vector3 CheckForBorders(Vector3 delta)
     {
         var nextPosZ = transform.position.x + delta.x;

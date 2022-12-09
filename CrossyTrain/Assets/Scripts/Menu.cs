@@ -8,6 +8,7 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject _inGameCanvas;
 
     public bool IsGameStarted { get; private set; }
+    
     private void Awake()
     {
         _inGameCanvas.SetActive(false);

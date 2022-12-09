@@ -6,6 +6,7 @@ using UnityEngine;
 public class Move : MonoBehaviour
 {
     [SerializeField] private float _speed;
+    
     void Update()
     {
         MoveRight();
